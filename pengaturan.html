@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="mb-16 fs-16 fw-600">Pengaturan Sistem</h3>
+            <p class="text-muted">Manajemen pengguna dan konfigurasi aplikasi.</p>
+            
+            <div class="mt-24">
+              <h4 class="mb-12">Daftar Pengguna</h4>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>USERNAME</th>
+                      <th>NAMA</th>
+                      <th>ROLE</th>
+                      <th>UNIT</th>
+                    </tr>
+                  </thead>
+                  <tbody id="userTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Components.init('pengaturan')) return;
+      Utils.showLoading();
+      const res = await API.getData('Users');
+      const tbody = document.getElementById('userTbody');
+      if(res.success && res.data.length > 0) {
+        tbody.innerHTML = res.data.map(d => `
+          <tr>
+            <td class="fw-600">${d.username}</td>
+            <td>${d.nama}</td>
+            <td><span class="badge-status review">${CONFIG.ROLE_LABELS[d.role] || d.role}</span></td>
+            <td>${d.unit}</td>
+          </tr>
+        `).join('');
+      }
+      Utils.hideLoading();
+    });
+  </script>
+</body>
+</html>

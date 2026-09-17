@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard PLN RAB & Monitoring - Ringkasan pelaksanaan pekerjaan dan anggaran">
+  <title>Dashboard - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⚡</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      
+      <main class="main-content">
+        <!-- Summary Cards -->
+        <div class="summary-cards stagger" id="summaryCards"></div>
+
+        <!-- Charts Row 1: Realisasi vs Rencana + Komposisi -->
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-body">
+              <div class="chart-header">
+                <h3>Realisasi vs Rencana</h3>
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:#1B3A5C"></div> RAB Kumulatif</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div> Realisasi Kumulatif</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div> Target</div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartRealisasiRencana"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-body">
+              <div class="chart-header">
+                <h3>Komposisi Anggaran</h3>
+                <select class="filter-select" style="font-size:11px;padding:4px 24px 4px 8px;">
+                  <option>Berdasarkan Jenis Pekerjaan</option>
+                </select>
+              </div>
+              <div style="display:flex;align-items:center;gap:20px;">
+                <div style="position:relative;width:180px;height:180px;flex-shrink:0;">
+                  <canvas id="chartKomposisi"></canvas>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                    <div style="font-size:22px;font-weight:800;" id="totalAnggaranDonut">25,00 M</div>
+                    <div style="font-size:11px;color:var(--text-muted);">Total Anggaran</div>
+                  </div>
+                </div>
+                <div id="komposisiLegend" style="flex:1;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row 2: Realisasi Bulanan + Top 5 + Status + Banner -->
+        <div class="dashboard-bottom">
+          <!-- Realisasi per Bulan -->
+          <div class="card">
+            <div class="card-body">
+              <div class="chart-header">
+                <h3>Realisasi per Bulan</h3>
+              </div>
+              <div class="chart-container-sm">
+                <canvas id="chartRealisasiBulanan"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 5 Penyedia -->
+          <div class="card">
+            <div class="card-body">
+              <div class="chart-header">
+                <h3>Top 5 Penyedia</h3>
+              </div>
+              <div id="top5Penyedia" class="penyedia-list"></div>
+            </div>
+          </div>
+
+          <!-- Status Pekerjaan -->
+          <div class="card">
+            <div class="card-body">
+              <div class="chart-header">
+                <h3>Status Pekerjaan</h3>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div style="position:relative;width:120px;height:120px;flex-shrink:0;">
+                  <canvas id="chartStatus"></canvas>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                    <div style="font-size:28px;font-weight:800;" id="totalPaket">120</div>
+                    <div style="font-size:10px;color:var(--text-muted);">Total Paket</div>
+                  </div>
+                </div>
+                <div id="statusLegend" class="status-legend" style="flex:1;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Banner + Notifikasi + Quick Access -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <!-- Banner -->
+            <div class="hero-banner" style="min-height:auto;padding:20px;">
+              <h3 style="font-size:16px;">Energi untuk Kehidupan yang Lebih Baik</h3>
+              <p style="font-size:11px;margin-top:4px;">PLN Distribusi Bali</p>
+            </div>
+
+            <!-- Notifikasi -->
+            <div class="card" style="flex:1;">
+              <div class="card-body" style="padding:14px;">
+                <div class="chart-header" style="margin-bottom:8px;">
+                  <h3 style="font-size:13px;">Informasi & Notifikasi</h3>
+                  <a href="#" style="font-size:11px;color:var(--primary-accent);">Lihat Semua</a>
+                </div>
+                <div id="notifications" class="notification-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div style="margin-top:20px;">
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;">Quick Access</h3>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;">
+                <a href="rab.html" class="quick-access-btn">
+                  <i data-lucide="file-plus" style="width:24px;height:24px;"></i>
+                  <span>Buat RAB Baru</span>
+                </a>
+                <a href="realisasi.html" class="quick-access-btn">
+                  <i data-lucide="bar-chart-3" style="width:24px;height:24px;"></i>
+                  <span>Input Realisasi</span>
+                </a>
+                <a href="laporan.html" class="quick-access-btn">
+                  <i data-lucide="calendar" style="width:24px;height:24px;"></i>
+                  <span>Laporan Bulanan</span>
+                </a>
+                <a href="material.html" class="quick-access-btn">
+                  <i data-lucide="package" style="width:24px;height:24px;"></i>
+                  <span>Rekap Material</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

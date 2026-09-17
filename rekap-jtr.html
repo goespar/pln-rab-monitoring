@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekap JTR - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div>
+                <h3 class="fs-16 fw-600">Rekapitulasi Jaringan Tegangan Rendah (JTR)</h3>
+                <p class="text-muted fs-13 mt-4">Data ditarik otomatis dari RAB yang mengandung komponen JTR.</p>
+              </div>
+              <div style="display:flex;gap:12px">
+                <select class="form-select"><option>Tahun 2026</option></select>
+                <button class="btn btn-primary"><i data-lucide="download"></i> Export Excel</button>
+              </div>
+            </div>
+            
+            <div class="dashboard-grid mt-24">
+              <div class="summary-card orange">
+                <div class="card-icon"><i data-lucide="activity"></i></div>
+                <div class="card-content">
+                  <div class="card-label">Total Volume JTR</div>
+                  <div class="card-value">250.0 <span class="fs-14">kms</span></div>
+                </div>
+              </div>
+              <div class="summary-card green">
+                <div class="card-icon"><i data-lucide="check-circle"></i></div>
+                <div class="card-content">
+                  <div class="card-label">Volume Terealisasi</div>
+                  <div class="card-value">110.5 <span class="fs-14">kms</span></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="table-container mt-24">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>NAMA PEKERJAAN</th>
+                    <th>KOMPONEN JTR</th>
+                    <th class="text-center">TARGET (kms)</th>
+                    <th class="text-center">REALISASI (kms)</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Pembangunan JTR Perumahan Baru</td>
+                    <td>Pemasangan JTR Per Kilometer</td>
+                    <td class="text-center fw-600">15.0</td>
+                    <td class="text-center fw-600 text-success">5.0</td>
+                    <td><span class="badge-status on-progress">On Progress</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => Components.init('rekap-jtr'));
+  </script>
+</body>
+</html>

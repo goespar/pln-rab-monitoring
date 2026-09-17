@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAB - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⚡</text></svg>">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="stepper" id="rabStepper">
+              <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Informasi Umum</div>
+              </div>
+              <div class="step-connector"></div>
+              <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Detail Pekerjaan</div>
+              </div>
+              <div class="step-connector"></div>
+              <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Rincian Biaya</div>
+              </div>
+              <div class="step-connector"></div>
+              <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">Review & Simpan</div>
+              </div>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="step-content active" id="step1">
+              <h3 style="font-size:16px;margin-bottom:20px;font-weight:600;">Informasi Pekerjaan</h3>
+              <form id="formPekerjaan">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nama Pekerjaan <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="nama_pekerjaan" required placeholder="Contoh: Rehabilitasi JTM Penyulang Tabanan">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Pengadaan <span class="required">*</span></label>
+                    <select class="form-select" id="pengadaan" required onchange="RabApp.handlePengadaanChange(this.value)"></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">UP3 <span class="required">*</span></label>
+                    <select class="form-select" id="up3" required></select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Lokasi / ULP <span class="required">*</span></label>
+                    <select class="form-select" id="ulp" required></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tahun Anggaran <span class="required">*</span></label>
+                    <select class="form-select" id="tahun_anggaran" required>
+                      <option value="2026">2026</option>
+                      <option value="2025">2025</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Volume Paket</label>
+                    <div class="input-group">
+                      <input type="number" step="0.01" class="form-input" id="volume_paket">
+                      <span class="input-addon">kms</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Sumber Anggaran</label>
+                    <select class="form-select" id="sumber_anggaran">
+                      <option value="RUPTL/RKAP">RUPTL/RKAP</option>
+                      <option value="Lainnya">Lainnya</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+                  <button type="button" class="btn btn-primary" onclick="RabApp.nextStep()">Selanjutnya <i data-lucide="arrow-right"></i></button>
+                </div>
+              </form>
+            </div>
+
+            <!-- STEP 2 & 3 Combined for UI simplicity like the image -->
+            <div class="step-content" id="step2">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h3 style="font-size:16px;font-weight:600;">Rincian RAB</h3>
+                <button type="button" class="btn btn-outline btn-sm" onclick="RabApp.addItem()"><i data-lucide="plus"></i> Tambah Item</button>
+              </div>
+              
+              <div class="table-container" style="max-height:400px;overflow-y:auto;">
+                <datalist id="materialList"></datalist>
+                <table class="data-table" id="rabTable">
+                  <thead style="position:sticky;top:0;z-index:1;">
+                    <tr>
+                      <th rowspan="2" width="40" class="text-center">NO</th>
+                      <th rowspan="2">URAIAN PEKERJAAN/MATERIAL</th>
+                      <th rowspan="2" width="80" class="text-center">VOL</th>
+                      <th rowspan="2" width="80" class="text-center">SAT</th>
+                      <th colspan="2" class="text-center" style="border-bottom:1px solid var(--border)">HARGA SATUAN</th>
+                      <th colspan="2" class="text-center" style="border-bottom:1px solid var(--border)">HARGA BAGIAN</th>
+                      <th rowspan="2" width="130" style="text-align:right">TOTAL HARGA</th>
+                      <th rowspan="2" width="60" class="text-center">AKSI</th>
+                    </tr>
+                    <tr>
+                      <th width="120" style="text-align:right">MATERIAL</th>
+                      <th width="120" style="text-align:right">JASA</th>
+                      <th width="130" style="text-align:right">MATERIAL</th>
+                      <th width="130" style="text-align:right">JASA</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rabTbody">
+                    <!-- Items will be generated here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <div style="display:flex;justify-content:flex-end;margin-top:24px;">
+                <div style="width:400px;" class="rab-summary">
+                  <div class="rab-summary-row subtotal">
+                    <span class="rab-summary-label">Subtotal</span>
+                    <span class="rab-summary-value" id="subtotal">Rp 0</span>
+                  </div>
+                  <div class="rab-summary-row">
+                    <span class="rab-summary-label">PPN (12%)</span>
+                    <span class="rab-summary-value" id="ppn">Rp 0</span>
+                  </div>
+                  <div class="rab-summary-row total">
+                    <span class="rab-summary-label">Total</span>
+                    <span class="rab-summary-value" id="total">Rp 0</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="display:flex;justify-content:space-between;margin-top:32px;border-top:1px solid var(--border-light);padding-top:20px;">
+                <button type="button" class="btn btn-secondary" onclick="RabApp.prevStep()"><i data-lucide="arrow-left"></i> Kembali</button>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline" onclick="RabApp.saveDraft()">Simpan Draft</button>
+                  <button type="button" class="btn btn-primary" onclick="RabApp.nextStep()">Lanjut ke Review <i data-lucide="arrow-right"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step-content" id="step4">
+              <h3 style="font-size:16px;margin-bottom:20px;font-weight:600;">Review & Simpan</h3>
+              <div id="reviewContent"></div>
+              
+              <div style="display:flex;justify-content:space-between;margin-top:32px;border-top:1px solid var(--border-light);padding-top:20px;">
+                <button type="button" class="btn btn-secondary" onclick="RabApp.prevStep()"><i data-lucide="arrow-left"></i> Kembali</button>
+                <button type="button" class="btn btn-success" onclick="RabApp.submitRAB()"><i data-lucide="check"></i> Simpan Final</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/rab.js"></script>
+</body>
+</html>

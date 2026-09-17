@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="mb-16 fs-16 fw-600">Laporan & Monitoring</h3>
+            <div class="empty-state">
+              <i data-lucide="pie-chart"></i>
+              <h3>Halaman Laporan</h3>
+              <p>Fitur ekspor laporan PDF/Excel dan grafik detail akan ditampilkan di sini.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => Components.init('laporan'));
+  </script>
+</body>
+</html>

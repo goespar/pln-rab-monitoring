@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Master Pengadaan & Kegiatan - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Cari nama pengadaan / komponen...">
+              </div>
+              <button class="btn btn-primary"><i data-lucide="plus"></i> Tambah Pengadaan</button>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>PENGADAAN</th>
+                    <th>KOMPONEN PEKERJAAN</th>
+                    <th class="text-center">SATUAN</th>
+                    <th class="text-center">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="kegiatanTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Components.init('kegiatan')) return;
+      Utils.showLoading();
+      
+      try {
+        const res = await API.getData('Kegiatan');
+        const tbody = document.getElementById('kegiatanTbody');
+        
+        let dataToRender = res.data;
+        if (!dataToRender || dataToRender.length === 0) {
+          // Mock data based on the screenshot
+          dataToRender = [
+            { id: 1, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SUTM SKUTM SKTM Gardu Kubikel App TM App 3 Phasa TR Besar Catu Daya Dan SPKLU Program Pemasaran', komponen_pekerjaan: 'Pemasangan SUTM (AAACS 70-240 mm2) Per Kilometer', satuan: 'kms' },
+            { id: 2, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SUTM SKUTM SKTM Gardu Kubikel App TM App 3 Phasa TR Besar Catu Daya Dan SPKLU Program Pemasaran', komponen_pekerjaan: 'Pembongkaran SUTM (AAACS 70-240 mm2) Per Kilometer', satuan: 'kms' },
+            { id: 3, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SUTM SKUTM SKTM Gardu Kubikel App TM App 3 Phasa TR Besar Catu Daya Dan SPKLU Program Pemasaran', komponen_pekerjaan: 'Pemasangan SKUTM (150-240 mm2) Per Kilometer', satuan: 'kms' },
+            { id: 4, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SUTM SKUTM SKTM Gardu Kubikel App TM App 3 Phasa TR Besar Catu Daya Dan SPKLU Program Pemasaran', komponen_pekerjaan: 'Pemasangan 1 Unit Gardu Cantol 50-100 kVA 2 Jurusan', satuan: 'unit' },
+            { id: 5, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SKUTR Program Pemasaran', komponen_pekerjaan: 'Pemasangan JTR Per Kilometer', satuan: 'kms' },
+            { id: 6, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SKUTR Program Pemasaran', komponen_pekerjaan: 'Pembongkaran JTR Per Kilometer', satuan: 'kms' },
+            { id: 7, pengadaan: 'Pekerjaan Pengadaan Material Non MDU dan Jasa Konstruksi SKUTR Program Pemasaran', komponen_pekerjaan: 'Pelurusan (Penegakan) Tiang beton 9 meter - 200 daN', satuan: 'btg' }
+          ];
+        }
+        
+        if (dataToRender && dataToRender.length > 0) {
+          // Group by pengadaan for better visual
+          let lastPengadaan = '';
+          tbody.innerHTML = dataToRender.map(d => {
+            let trClass = '';
+            let pengadaanCell = '';
+            
+            if (d.pengadaan !== lastPengadaan) {
+              trClass = 'style="border-top: 2px solid var(--border)"';
+              pengadaanCell = `<td class="fw-600" style="vertical-align:top;max-width:300px;">${d.pengadaan}</td>`;
+              lastPengadaan = d.pengadaan;
+            } else {
+              pengadaanCell = `<td style="border:none;"></td>`;
+            }
+            
+            return `
+              <tr ${trClass}>
+                ${pengadaanCell}
+                <td>${d.komponen_pekerjaan}</td>
+                <td class="text-center"><span class="badge-status" style="background:var(--bg-input);color:var(--text)">${d.satuan}</span></td>
+                <td class="text-center"><button class="btn btn-sm btn-outline"><i data-lucide="edit-2" style="width:14px"></i></button></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        Utils.hideLoading();
+        if(window.lucide) lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>

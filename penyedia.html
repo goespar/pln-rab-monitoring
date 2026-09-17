@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penyedia - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Cari penyedia/kontraktor...">
+              </div>
+              <button class="btn btn-primary"><i data-lucide="plus"></i> Tambah Penyedia</button>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>NAMA PERUSAHAAN</th>
+                    <th>ALAMAT</th>
+                    <th>KONTAK</th>
+                    <th>KATEGORI</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="penyediaTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Components.init('penyedia')) return;
+      Utils.showLoading();
+      const res = await API.getData('Penyedia');
+      const tbody = document.getElementById('penyediaTbody');
+      if(res.success && res.data.length > 0) {
+        tbody.innerHTML = res.data.map(d => `
+          <tr>
+            <td class="fw-600">${d.nama_perusahaan}</td>
+            <td>${d.alamat}</td>
+            <td>${d.kontak}<br><span class="fs-12 text-muted">${d.email}</span></td>
+            <td>${d.kategori}</td>
+            <td><span class="badge-status ${d.status === 'active' ? 'selesai' : 'batal'}">${d.status}</span></td>
+          </tr>
+        `).join('');
+      }
+      Utils.hideLoading();
+    });
+  </script>
+</body>
+</html>

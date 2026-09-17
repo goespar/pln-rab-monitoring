@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realisasi - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Cari pekerjaan...">
+              </div>
+              <button class="btn btn-primary" onclick="RealisasiApp.openModal()"><i data-lucide="plus"></i> Input Realisasi Baru</button>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>TANGGAL</th>
+                    <th>PEKERJAAN</th>
+                    <th>NILAI REALISASI</th>
+                    <th>PROGRES FISIK</th>
+                    <th>KETERANGAN</th>
+                    <th>AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="realisasiTbody">
+                  <!-- Data here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Input Realisasi -->
+  <div class="modal" id="modalRealisasi">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="fw-600 fs-16">Update Progres & Realisasi</h3>
+        <button class="btn-close" onclick="RealisasiApp.closeModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="formRealisasi">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Pilih Kontrak/Pekerjaan <span class="required">*</span></label>
+              <select class="form-select" id="pekerjaan_id" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tanggal Laporan <span class="required">*</span></label>
+              <input type="date" class="form-input" id="tanggal" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Update Status Pekerjaan</label>
+              <select class="form-select" id="status_pekerjaan">
+                <option value="on_progress">On Progress</option>
+                <option value="selesai">Selesai</option>
+                <option value="tunda">Tunda (Kendala)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Progres Fisik (%) <span class="required">*</span></label>
+              <input type="number" class="form-input" id="persentase_fisik" min="0" max="100" required placeholder="Contoh: 75">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Keterangan / Kendala Progres</label>
+            <textarea class="form-input" id="keterangan" rows="2" placeholder="Tuliskan jika ada kendala di lapangan..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Upload Foto Dokumentasi <span class="required">*</span></label>
+              <input type="file" class="form-input" id="foto" accept="image/*" required>
+              <span class="fs-11 text-muted mt-4 d-block">Maksimal ukuran 2MB. Foto akan otomatis tersimpan di Google Drive.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pilih Lokasi (Peta Terintegrasi)</label>
+            <div id="mapContainer" style="height: 250px; border-radius: 8px; border: 1px solid var(--border);"></div>
+            <input type="hidden" id="lokasi_lat">
+            <input type="hidden" id="lokasi_lng">
+            <span class="fs-11 text-muted mt-4 d-block">Klik pada peta atau geser marker untuk menandai lokasi pekerjaan.</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="RealisasiApp.closeModal()">Batal</button>
+        <button class="btn btn-primary" onclick="RealisasiApp.saveData()">Simpan Realisasi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realisasi.js"></script>
+</body>
+</html>

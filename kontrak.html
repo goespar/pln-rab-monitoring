@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontrak - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Cari kontrak...">
+              </div>
+              <button class="btn btn-primary"><i data-lucide="plus"></i> Tambah Kontrak</button>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>NOMOR KONTRAK</th>
+                    <th>NILAI KONTRAK</th>
+                    <th>MASA PELAKSANAAN</th>
+                    <th>STATUS</th>
+                    <th>AKSI</th>
+                  </tr>
+                </thead>
+                <tbody id="kontrakTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Components.init('kontrak')) return;
+      Utils.showLoading();
+      const res = await API.getData('Kontrak');
+      const tbody = document.getElementById('kontrakTbody');
+      if(res.success && res.data.length > 0) {
+        tbody.innerHTML = res.data.map(d => `
+          <tr>
+            <td>
+              <div class="fw-600">${d.nomor_kontrak}</div>
+              <div class="fs-12 text-muted">Tgl: ${Utils.formatDate(d.tanggal_kontrak)}</div>
+            </td>
+            <td class="fw-600">${Utils.formatCurrency(d.nilai_kontrak)}</td>
+            <td>
+              <div>${d.masa_pelaksanaan}</div>
+              <div class="fs-12 text-muted">${Utils.formatDate(d.tanggal_mulai)} - ${Utils.formatDate(d.tanggal_selesai)}</div>
+            </td>
+            <td>${Utils.getStatusBadge(d.status)}</td>
+            <td><button class="btn btn-sm btn-outline">Detail</button></td>
+          </tr>
+        `).join('');
+      }
+      Utils.hideLoading();
+    });
+  </script>
+</body>
+</html>

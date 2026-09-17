@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekap JTM - PLN RAB & Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header" id="header"></header>
+      <main class="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="toolbar">
+              <div>
+                <h3 class="fs-16 fw-600">Rekapitulasi Jaringan Tegangan Menengah (JTM)</h3>
+                <p class="text-muted fs-13 mt-4">Data ditarik otomatis dari RAB yang mengandung komponen JTM.</p>
+              </div>
+              <div style="display:flex;gap:12px">
+                <select class="form-select"><option>Tahun 2026</option></select>
+                <button class="btn btn-primary"><i data-lucide="download"></i> Export Excel</button>
+              </div>
+            </div>
+            
+            <div class="dashboard-grid mt-24">
+              <div class="summary-card blue">
+                <div class="card-icon"><i data-lucide="activity"></i></div>
+                <div class="card-content">
+                  <div class="card-label">Total Volume JTM</div>
+                  <div class="card-value">124.5 <span class="fs-14">kms</span></div>
+                </div>
+              </div>
+              <div class="summary-card green">
+                <div class="card-icon"><i data-lucide="check-circle"></i></div>
+                <div class="card-content">
+                  <div class="card-label">Volume Terealisasi</div>
+                  <div class="card-value">82.3 <span class="fs-14">kms</span></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="table-container mt-24">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>NAMA PEKERJAAN</th>
+                    <th>KOMPONEN JTM</th>
+                    <th class="text-center">TARGET (kms)</th>
+                    <th class="text-center">REALISASI (kms)</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Rehabilitasi JTM Penyulang Tabanan</td>
+                    <td>Pemasangan SUTM (AAACS 70-240 mm2)</td>
+                    <td class="text-center fw-600">12.5</td>
+                    <td class="text-center fw-600 text-success">10.0</td>
+                    <td><span class="badge-status on-progress">On Progress</span></td>
+                  </tr>
+                  <tr>
+                    <td>Perluasan JTM Kawasan Industri</td>
+                    <td>Pemasangan SKUTM (150-240 mm2)</td>
+                    <td class="text-center fw-600">8.0</td>
+                    <td class="text-center fw-600 text-success">8.0</td>
+                    <td><span class="badge-status selesai">Selesai</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => Components.init('rekap-jtm'));
+  </script>
+</body>
+</html>

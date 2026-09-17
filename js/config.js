@@ -5,7 +5,7 @@
 const CONFIG = {
   // Google Apps Script Web App URL
   // Replace this with your deployed Apps Script URL
-  API_URL: 'https://script.google.com/macros/s/AKfycbw24s7LeOr2EQnAQljBYPfdwLu62zwC7rz5rHLk1_XdkKv0uqGrV4pHv_Ss7uKgpIATIg/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzr_Ctjh-22Jpb0HtpTUSUFFV9wA57ZX6_I4H_kalscQ1OWY78Bk3xolc4kTIl3RRHpAQ/exec',
 
   // Google Drive Folder IDs
   DRIVE_FOLDER_DB: '1zUi12nHqdI9m3xpsx1jwd7Eb_TgSHrQo', // Database folder
